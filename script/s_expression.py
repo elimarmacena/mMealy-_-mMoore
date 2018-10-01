@@ -53,30 +53,31 @@ def print_sexp(exp):
  
 if __name__ == '__main__':
     sexp ="""
-    (moore
+    (mealy
 ( symbols-in a b)
 ( symbols-out 0 1)
-( states q0 q0' q1 q2 q3 q3' )
+( states q0 q1 q2 q3 )
 ( start q0 )
-( finals q3 q3' )
+( finals q3 )
 ( trans
-( q0 q1 a ) ( q0 q3 b) ( q1 q3' a ) ( q1 q2 b)
-( q2 q0' a ) ( q2 q3 ' b) ( q3 q3 ' a ) ( q3 q0' b)
-( q3' q3' a ) ( q ' q0' b ) )
-( out-fn
-( q0 ( ) ) ( q0' 1) ( q1 0)
-( q2 1) ( q3 0) ( q3 ' 1 ) ) )
+( q0 q1 a 0) ( q0 q3 b 0) ( q1 q2 b 1) ( q1 q3 a 1)
+( q2 q3 a 0) ( q2 q3 b 1) ( q3 q0 b 1) ( q3 q3 a 1 ) ) )
     """
-# """
-#     (mealy
+
+#     """
+#     (moore
 # ( symbols-in a b)
 # ( symbols-out 0 1)
-# ( states q0 q1 q2 q3 )
+# ( states q0 q0' q1 q2 q3 q3' )
 # ( start q0 )
-# ( finals q3 )
+# ( finals q3 q3' )
 # ( trans
-# ( q0 q1 a 0) ( q0 q3 b 0) ( q1 q2 b 1) ( q1 q3 a 1)
-# ( q2 q3 a 0) ( q2 q3 b 1) ( q3 q0 b 1) ( q3 q3 a 1 ) ) )
+# ( q0 q1 a ) ( q0 q3 b) ( q1 q3' a ) ( q1 q2 b)
+# ( q2 q0' a ) ( q2 q3 ' b) ( q3 q3 ' a ) ( q3 q0' b)
+# ( q3' q3' a ) ( q ' q0' b ) )
+# ( out-fn
+# ( q0 ( ) ) ( q0' 1) ( q1 0)
+# ( q2 1) ( q3 0) ( q3 ' 1 ) ) )
 #     """
 
     
