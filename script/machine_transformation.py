@@ -142,7 +142,7 @@ def treat_trans(state: str, machine: dict)->dict:
                     #COPYING THE TRANSACTION OF THE ORIGINAL STATE INTO THE NEW ONE
                     new_state_trans = copy_trans_to_new_state(
                         new_trans[1], state, machine)  # CREATE THE TRANS FOR THE NEW STATE
-                    treated_state["trans"].append(new_state_trans)
+                    treated_state["trans"].extend(new_state_trans)
                     #CHECKING IF THE STATE IS A FINAL STATE, SO THEN THE NEW STATE WILL BE A FINAL STATE TOO
                     if state in machine["final"]:
                         treated_state["final"].append(new_trans[1])
@@ -227,7 +227,7 @@ def mealy_to_moore(mealy_machine: dict)->dict:
                 moore_machine["trans"].append(new_trans)
                 new_state_trans = copy_trans_to_new_state(
                     new_trans[1], mealy_machine["start"][0], mealy_machine)  # CREATE THE TRANS FOR THE NEW STATE
-                moore_machine["trans"].append(new_state_trans)
+                moore_machine["trans"].extend(new_state_trans)
                 moore_machine["out_fn"].append(out_fn)
             # END ELSE
         # END FOR
