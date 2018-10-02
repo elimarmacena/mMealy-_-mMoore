@@ -105,7 +105,7 @@ def copy_trans_initial_state(machine: dict)->list:
     return trans
 
 #TREAT THE TRANSACTION OF A MEALY MACHINE REMOVING THE MULTIPLE OUTPUT IN A UNIQUE STATE
-def treat_trans(state: str, machine: dict)->dict:
+def treat_trans(state: str, machine_mealy: dict, machine_moore:dict)->dict:
     out_symbols = []
     count_diferent_symbols = 0
     treated_state = {}
@@ -113,55 +113,58 @@ def treat_trans(state: str, machine: dict)->dict:
     treated_state["trans"] = []
     treated_state["states"] = []
     treated_state["out_fn"] = []
-
-    for x in machine["trans"]:
-        if x[1] == state:
-            if x[3] not in out_symbols:
+    checked = False
+    for transaction in machine_mealy["trans"]:
+        if transaction[1] == state and machine_mealy["start"][0] not in transaction[0]: #BECAUSE THE TRANSACTIONS OF THE INITIAL STATE IS ALREADY TREATED
+            if transaction[3] not in out_symbols:
                 #PUT THE REGISTRE OF THE FIRST TYPE OF OUTPUT FROM THE STATE
                 if count_diferent_symbols < 1:
                     count_diferent_symbols += 1
-                    out_symbols.append(x[3])
-                    treated_state["trans"].append(x[:3])
-                    treated_state["out_fn"].append([x[1], x[3]])
+                    out_symbols.append(transaction[3])
+                    treated_state["trans"].append(transaction[:3])
+                    treated_state["out_fn"].append([transaction[1], transaction[3]])
                 # END IF
                 #WORKING WITH THE OTHERS OUTPUTS FROM THE SAME STATE
                 else:
                     count_diferent_symbols += 1
-                    out_symbols.append(x[3])
+                    out_symbols.append(transaction[3])
                     new_trans = []
-                    new_trans.append(x[0])
+                    new_trans.append(transaction[0])
                     #RENAME THE STATE WITH A RANDOM SYMBOL
-                    new_trans.append(x[1]+random.choice(string.punctuation))
-                    new_trans.append(x[2])
+                    new_trans.append(transaction[1]+random.choice(string.punctuation))
+                    new_trans.append(transaction[2])
                     #ADDING THE NEW STATE INTO THE DICTIONARY
                     treated_state["states"].append(new_trans[1])
                     #ADDING THE NEW TRANSATION INTO THE DICTIONARY
                     treated_state["trans"].append(new_trans)
                     #ADDING THE OUTPUT OF THE STATE INTO THE DICTIONARY
-                    treated_state["out_fn"].append([new_trans[1], x[3]])
+                    treated_state["out_fn"].append([new_trans[1], transaction[3]])
                     #COPYING THE TRANSACTION OF THE ORIGINAL STATE INTO THE NEW ONE
                     new_state_trans = copy_trans_to_new_state(
-                        new_trans[1], state, machine)  # CREATE THE TRANS FOR THE NEW STATE
+                        new_trans[1], state, machine_mealy)  # CREATE THE TRANS FOR THE NEW STATE
                     treated_state["trans"].extend(new_state_trans)
                     #CHECKING IF THE STATE IS A FINAL STATE, SO THEN THE NEW STATE WILL BE A FINAL STATE TOO
-                    if state in machine["final"]:
+                    if state in machine_mealy["final"]:
                         treated_state["final"].append(new_trans[1])
 
                 # END ELSE
             # END IF
             #IF THE OUTPUT IS ALREADY REGISTERED WE JUST NEED TO CHANGE THE TRANSACTION OF THE STATE HOW USED THE OLD STATE
             else:
-                for y in treated_state["out_fn"]:
-                    if y == x[3]:
+                for out_fn in treated_state["out_fn"]:
+                    if out_fn[1] == transaction[3]:
                         new_trans = []
-                        new_trans.append(x[0])
-                        new_trans.append(y[0])
-                        new_trans.append(x[2])
+                        new_trans.append(transaction[0])
+                        new_trans.append(out_fn[0])
+                        new_trans.append(transaction[2])
                         treated_state["trans"].append(new_trans)
                     # END IF
                 # END FOR
             # END ELSE
         # END IF
+
+
+            
     # END FOR
     return treated_state
 
@@ -236,7 +239,7 @@ def mealy_to_moore(mealy_machine: dict)->dict:
     for x in mealy_machine["states"]:
         if x != mealy_machine["start"][0]:
             #CHECK IF THE STATE HAVE 2 TYPES OF OUTPUT IN A UNIQUE STATE
-            trans_treated = treat_trans(x, mealy_machine)
+            trans_treated = treat_trans(x, mealy_machine,moore_machine)
             #AFTER TREAT A STATE WE PUT THE PARAMETERS INTO THE NEW MACHINE
             for y in trans_treated.keys():
                 moore_machine[y].extend(trans_treated[y])
