@@ -162,6 +162,10 @@ def treat_trans(state: str, machine_mealy: dict, machine_moore:dict)->dict:
                 # END FOR
             # END ELSE
         # END IF
+        elif (transaction[1] == state) and ( transaction[1] not in machine_moore["out_fn"]): #ADDING JUST THE STATE AND YOUR OUTPUT BECAUSE THE TRANSACTION IS ALREADY RESGISTRED
+            treated_state["out_fn"].append([transaction[1], transaction[3]])
+            count_diferent_symbols += 1
+            out_symbols.append(transaction[3])
 
 
             
@@ -255,7 +259,10 @@ def main():
     #['moore', ['symbols-in', 'a', 'b'], ['symbols-out', 0, 1], ['states', 'q0', "q0'", 'q1', 'q2', 'q3', "q3'"], ['start', 'q0'], ['finals', 'q3',"q3'"], ['trans', ['q0', 'q1', 'a'], ['q0', 'q3', 'b'],["q0'","q1","a"],["q0'","q3","b"], ['q1', "q3'", 'a'], ['q1', 'q2', 'b'], ['q2', "q3", 'a'], ['q2', "q3'", 'b'], ['q3', "q3'", 'a'], ['q3', "q0'", 'b'], ["q3'", "q3'", 'a'], ["q3'", "q0'",'b']], ['out-fn', ['q0', []], ["q0'", 1], ['q1', 0], ['q2', 1], ['q3', 0], ["q3'", 1]]]
     maquina = list_to_machine(teste)
     show_machine(maquina)
-    show_machine(mealy_to_moore(maquina))
+    moore=mealy_to_moore(maquina)
+    show_machine(moore)
+    mealy = moore_to_mealy(moore)
+    show_machine(mealy)
     #show_machine (moore_to_mealy(maquina))
     # print (maquina["type"])
     # try:
