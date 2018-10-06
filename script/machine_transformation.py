@@ -151,7 +151,7 @@ def treat_out_transaction(transaction_mealy: list, new_states: list):
         if transaction_mealy[1] == state_created[0]: #CASE THE STATE PASSED IS EQUALS THE ATUAL STATE 
             for state_informations in state_created[1]: #WE WILL SEARCH FOR THE OUTPUTSYMBOL OF THE TRANSACTION
                 if transaction_mealy[3] == state_informations[1]:
-                    new_destine_state = [transaction_mealy[0],state_informations[0], transaction_mealy[3]]
+                    new_destine_state = [transaction_mealy[0],state_informations[0], transaction_mealy[2]]
                     return new_destine_state
 
 def transform_transaction_to_moore(transaction:list, new_states:list):
@@ -212,8 +212,8 @@ def main():
     show_machine(maquina)
     moore = mealy_to_moore(maquina)
     show_machine(moore)
-    mealy = moore_to_mealy(moore)
-    show_machine(mealy)
+    # mealy = moore_to_mealy(moore)
+    # show_machine(mealy)
     return 0
 
 
