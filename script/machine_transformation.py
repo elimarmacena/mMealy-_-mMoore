@@ -19,46 +19,46 @@ def list_to_machine(lst_machine: list)->dict:
 def show_machine(machine: dict):
     print("{0} MACHINE".format(machine["type"].upper()))
     print("INPUT SYMBOLS:")
-    for in_symbols in machine["symbols_in"]:
-        print(in_symbols)
+    for x in machine["symbols_in"]:
+        print(x)
     print("OUTPUT SYMBOLS:")
-    for out_symbols in machine["symbols_out"]:
-        print(out_symbols)
+    for x in machine["symbols_out"]:
+        print(x)
     print("STATES:")
-    for state in machine["states"]:
-        print(state)
+    for x in machine["states"]:
+        print(x)
     print("INITIAL SYMBOL: {0}".format(machine["start"]))
     print("FINAL STATE: {0}".format(machine["final"]))
     print("TRASATIONS")
-    for transaction in machine["trans"]:
-        print(transaction)
+    for x in machine["trans"]:
+        print(x)
     if machine["type"].lower() == "moore":
         print("STATES AND OUTPUTS:")
-        for out_fn in machine["out_fn"]:
-            print(out_fn)
+        for x in machine["out_fn"]:
+            print(x)
     print()
 
 #CHEK IF THE MOORE MACHINE IS IMPOSSIPLE TO CONVERT TO A MEALY MACHINE
 def moore_intransitive(moore: dict)->bool:
     starts = moore["start"]
-    for out_fn in moore["out_fn"]:
-        if out_fn[0] in starts and out_fn[1] != []: #IF THE INITIAL STATE HAVE A OUTPUT SYMBOL WE CAN'T CONVERT INTO A MEALY MACHINE
+    for y in moore["out_fn"]:
+        if y[0] in starts and y[1] != []: #IF THE INITIAL STATE HAVE A OUTPUT SYMBOL WE CAN'T CONVERT INTO A MEALY MACHINE
             return True
     return False
 
 #TAKE THE TRANSACTION OF A STATE
 def take_trans_state(state: str, machine: dict)->list:
     trans_state = []
-    for transaction in machine["trans"]:
+    for x in machine["trans"]:
         if state == x[0]:
-            trans_state.append(transaction) #TAKE THE TRANSACTION OF THE STATE AND PUT INTO A LIST
+            trans_state.append(x) #TAKE THE TRANSACTION OF THE STATE AND PUT INTO A LIST
     return trans_state
 
 #TAKE THE OUTPUT FROM THE STATE
 def take_out_state(state: str, moore: dict)->str:
-    for out_fn in moore["out_fn"]:
+    for x in moore["out_fn"]:
         if state == x[0]:
-            return out_fn[1] #RETURN THE OUTPUT SYMBOL
+            return x[1] #RETURN THE OUTPUT SYMBOL
 
 #TRANSFORM THE OUTPUT IN THE STATE IN A OUTPUT IN THE TRANSATION
 def out_to_trans(mealy: dict, moore: dict)->list:
@@ -67,8 +67,8 @@ def out_to_trans(mealy: dict, moore: dict)->list:
         state = state_x
         state_out = take_out_state(state, moore)
         trans_state = take_trans_state(state, moore)
-        for transaction in trans_state:
-            _temp = transaction[:] #TAKE THE TRANSACTION WITHOUT THE OUTPUT SYMBOL
+        for y in trans_state:
+            _temp = y[:] #TAKE THE TRANSACTION WITHOUT THE OUTPUT SYMBOL
             _temp.append(state_out) #ADD THE OUTPUT SYMBOL INTO THE TTRANSACTION
             trans_with_out.append(_temp) #REFESH THE LIST OF TRANSACTION WITH OUTPUT
         # END FOR Y
@@ -195,6 +195,14 @@ def mealy_to_moore(mealy: dict)->dict:
         moore_transactions = transform_transaction_to_moore(new_destine_state,new_states) #HERE WE WILL CREATE A LIST WITH THE ALL TRANSACTIONS OF THE STATE AND DERIVATE STATES
         moore["trans"].extend(moore_transactions)
     return moore
+
+
+
+
+
+
+
+
 
 def main():
     teste = ['mealy', ['symbols-in', 'a', 'b'], ['symbols-out', 0, 1], ['states', 'q0', 'q1', 'q2', 'q3'], ['start', 'q0'], ['finals', 'q3'], ['trans', ['q0', 'q1',
