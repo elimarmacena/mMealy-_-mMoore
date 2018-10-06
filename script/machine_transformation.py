@@ -75,97 +75,6 @@ def out_to_trans(mealy: dict, moore: dict)->list:
     # END FOR X
     return trans_with_out
 
-#OUTPUTS FROM THE RECEIVER STATE
-def out_trans_receive(state: str, mealy: dict)->list:
-    trans_to_state = []
-    for transaction in mealy["trans"]:
-        if(transaction[1] == state):
-            trans_to_state.append(transaction)
-    return trans_to_state
-
-#COPY THE TRANSACTION OF A STATE X TO A STATE Y
-def copy_trans_to_new_state(new_state: str, old_state: str, machine: dict)->list:
-    trans = []
-    for transaction in machine["trans"]:
-        if transaction[0] == old_state:
-            trans.append([new_state, transaction[1], transaction[2]])
-        # END IF
-    # END FOR
-    return trans
-
-#COPY THE TRANSACTION OF THE INITIAL STATE
-def copy_trans_initial_state(machine: dict)->list:
-    trans = []
-    initial_state = machine["start"][0]
-    for transaction in machine["trans"]:
-        if transaction[0] == initial_state:
-            trans.append(transaction[:3])
-        # END IF
-    # END FOR
-    return trans
-
-#TREAT THE TRANSACTION OF A MEALY MACHINE REMOVING THE MULTIPLE OUTPUT IN A UNIQUE STATE
-def treat_trans(state: str, machine: dict)->dict:
-    out_symbols = []
-    count_diferent_symbols = 0
-    treated_state = {}
-    treated_state["final"] = []
-    treated_state["trans"] = []
-    treated_state["states"] = []
-    treated_state["out_fn"] = []
-
-    for transaction in machine["trans"]:
-        if transaction[1] == state :
-            if transaction[3] not in out_symbols:
-                #PUT THE REGISTRE OF THE FIRST TYPE OF OUTPUT FROM THE STATE
-                if count_diferent_symbols < 1:
-                    count_diferent_symbols += 1
-                    out_symbols.append(transaction[3])
-                    treated_state["trans"].append(transaction[:3])
-                    treated_state["out_fn"].append([transaction[1], transaction[3]])
-                # END IF
-                #WORKING WITH THE OTHERS OUTPUTS FROM THE SAME STATE
-                else:
-                    count_diferent_symbols += 1
-                    out_symbols.append(transaction[3])
-                    new_trans = []
-                    new_trans.append(transaction[0])
-                    #RENAME THE STATE WITH A RANDOM SYMBOL
-                    new_trans.append(transaction[1]+random.choice(string.punctuation))
-                    new_trans.append(transaction[2])
-                    #ADDING THE NEW STATE INTO THE DICTIONARY
-                    treated_state["states"].append(new_trans[1])
-                    #ADDING THE NEW TRANSATION INTO THE DICTIONARY
-                    treated_state["trans"].append(new_trans)
-                    #ADDING THE OUTPUT OF THE STATE INTO THE DICTIONARY
-                    treated_state["out_fn"].append([new_trans[1], transaction[3]])
-                    #COPYING THE TRANSACTION OF THE ORIGINAL STATE INTO THE NEW ONE
-                    new_state_trans = copy_trans_to_new_state(
-                        new_trans[1], state, machine)  # CREATE THE TRANS FOR THE NEW STATE
-                    treated_state["trans"].extend(new_state_trans)
-                    #CHECKING IF THE STATE IS A FINAL STATE, SO THEN THE NEW STATE WILL BE A FINAL STATE TOO
-                    if state in machine["final"]:
-                        treated_state["final"].append(new_trans[1])
-
-                # END ELSE
-            # END IF
-            #IF THE OUTPUT IS ALREADY REGISTERED WE JUST NEED TO CHANGE THE TRANSACTION OF THE STATE HOW USED THE OLD STATE
-            else:
-                for out_fn in treated_state["out_fn"]:
-                    if out_fn[1] == transaction[3]:
-                        new_trans = []
-                        new_trans.append(transaction[0])
-                        new_trans.append(out_fn[0])
-                        new_trans.append(transaction[2])
-                        treated_state["trans"].append(new_trans)
-                    # END IF
-                # END FOR
-            # END ELSE
-        # END IF
-    # END FOR
-    return treated_state
-
-
 #TRANSFORME A MOORE MACHINE INTO A MEALY MACHINE
 def moore_to_mealy(moore_machine: dict)->dict:
     # CHECK OF THE POSSIBLLITY TO TRANSFORM THE MACHINE
@@ -185,66 +94,107 @@ def moore_to_mealy(moore_machine: dict)->dict:
         mealy_machine["trans"] = out_to_trans(mealy_machine, moore_machine)
         return mealy_machine
 
+#USED TO ESTABLISH THE FINAL STATES IN THE MOORE MACHINE
+def treat_final_symbols(new_states:list,finals_mealy:list):
+    new_finals_states=[]
+    for final in finals_mealy:
+        for state in new_states:
+            if final == state[0]:
+                for derivative_state in state[1]:
+                    new_finals_states.append(derivative_state[0])
+    return new_finals_states
 
-#TRANSFORME A MEALY MACHINE INTO A MOORE MACHINE
-def mealy_to_moore(mealy_machine: dict)->dict:
-    moore_machine = {}
-    moore_machine["type"] = "moore"
-    moore_machine["symbols_in"] = mealy_machine["symbols_in"][:]
-    moore_machine["symbols_out"] = mealy_machine["symbols_out"][:]
-    moore_machine["states"] = mealy_machine["states"][:]
-    moore_machine["start"] = mealy_machine["start"][:]
-    moore_machine["final"] = mealy_machine["final"][:]
-    moore_machine["trans"] = []
-    moore_machine["trans"].extend( copy_trans_initial_state(mealy_machine) )
-    moore_machine["out_fn"] = []
 
-    # CHECK IF THE START STATE RECEIVE A TRANSATION WITH OUTPUT
-    trans_to_initial = out_trans_receive(
-        mealy_machine["start"][0], mealy_machine)
-    if(trans_to_initial != []):
-        out_symbols = []
-        for transaction in trans_to_initial:
-            new_trans = []
-            if(transaction[3] in out_symbols):  # CHECKING IF EXIST A STATE FOR THE OUTPUT SYMBOL
-                for out_fn in moore_machine["out_fn"]:
-                    new_trans.append(transaction[0])
-                    new_trans.append(out_fn[0])
-                    new_trans.append(transaction[2])
-                    moore_machine["trans"].append(new_trans)
-            # END IF
-            else:
-                new_trans.append(transaction[0])
-                #CREATING A NEW STATE USING A RANDOM SYMBOL 
-                new_trans.append(transaction[1]+random.choice(string.punctuation))
-                new_trans.append(transaction[2])
-                #ADDING THE SYMBOL INTO A LIST WHERE WE CAN CHECK THE OUTPUTS ALREADY REGISTERED
-                out_symbols.append(transaction[3])
-                #INFORMING THE OUTPUT OF THE SYMBOL
-                out_fn = [new_trans[1], transaction[3]]
-                moore_machine["states"].append(new_trans[1])
-                # RETIRECT THE STATES TO THE NEW STATE CREATE
-                moore_machine["trans"].append(new_trans)
-                new_state_trans = copy_trans_to_new_state(
-                    new_trans[1], mealy_machine["start"][0], mealy_machine)  # CREATE THE TRANS FOR THE NEW STATE
-                moore_machine["trans"].extend(new_state_trans)
-                moore_machine["out_fn"].append(out_fn)
-            # END ELSE
-        # END FOR
-        moore_machine["out_fn"].append([mealy_machine["start"][0], []])
-    # END IF
-    for state in mealy_machine["states"]:
-        if state != mealy_machine["start"][0]:
-            #CHECK IF THE STATE HAVE 2 TYPES OF OUTPUT IN A UNIQUE STATE
-            trans_treated = treat_trans(state, mealy_machine)
-            #AFTER TREAT A STATE WE PUT THE PARAMETERS INTO THE NEW MACHINE
-            for key in trans_treated.keys():
-                moore_machine[key].extend(trans_treated[key])
-            # END FOR
-        # END IF
-    # END FOR
-    return moore_machine
+# USED TO CHECK IF A OUTPUT SYMBOL IS ALREADY REGISTRED (ASSIST FUNCTIO TO TREAT_STATES)
+def check_output(symbol_output: str, created_output: list)->bool:
+    for output in created_output:
+        if output[1] == symbol_output:
+            return True
+    return False
 
+# USED TO CREATE A ITEM TO BE ADD IN THE STRUCT OF THE FUNCTION TREAT_STATES
+
+
+def states_outfn(state: str, out_fn: list)->list:
+    states_outfn = [state, []]
+    for data in out_fn:
+        states_outfn[1].append(data)
+    return states_outfn
+
+
+# RECIEVE A MEALY MACHINE AND CREATE A LIST WITH THE STATE OF THE MEALY MACHINE AND THE STATES(NEW INCLUDE) AND OUT_FNS
+# STRUCT [[MEALY_STATE[(STATE,OUTPUT),....]], [MEALY_STATE[(STATE,OUTPUT),....]]....]
+def treat_states(mealy: dict)->list:
+    treat = []
+    for mealy_state in mealy["states"]:
+        outfn_mark = []
+        for transaction in mealy["trans"]:
+            if transaction[1] == mealy_state and mealy_state == mealy["start"][0]:
+                if transaction[3] != [] and not check_output(transaction[3], outfn_mark):
+                    outfn_mark.append(
+                        (mealy_state+random.choice(string.ascii_uppercase), transaction[3]))
+            elif transaction[1] == mealy_state:
+                print(len(outfn_mark))
+                if not check_output(transaction[3], outfn_mark) and len(outfn_mark) > 0:
+                    outfn_mark.append(
+                        (mealy_state+random.choice(string.ascii_uppercase), transaction[3]))
+                elif not check_output(transaction[3], outfn_mark) and len(outfn_mark) == 0:
+                    outfn_mark.append((mealy_state, transaction[3]))
+        if mealy_state == mealy["start"][0]:
+            outfn_mark.append((mealy_state, []))
+        treat.append(states_outfn(mealy_state, outfn_mark))
+    return treat
+
+#HERE WE CHANGE THE STATE DESTINATION FOR THE NEW STATE WHAT WE HAVE FROM OTHER STEPS
+def treat_out_transaction(transaction_mealy: list, new_states: list):
+    for state_created in new_states:
+        if transaction_mealy[1] == state_created[0]: #CASE THE STATE PASSED IS EQUALS THE ATUAL STATE 
+            for state_informations in state_created[1]: #WE WILL SEARCH FOR THE OUTPUTSYMBOL OF THE TRANSACTION
+                if transaction_mealy[3] == state_informations[1]:
+                    new_destine_state = [transaction_mealy[0],state_informations[0], transaction_mealy[3]]
+                    return new_destine_state
+
+def transform_transaction_to_moore(transaction:list, new_states:list):
+    moore_transactions = []
+    for state_created in new_states:
+        if transaction[0] == state_created[0]:
+            for derivative_states in state_created[1]:
+                    moore_transactions.append([derivative_states[0],transaction[1],transaction[2]]) #HERE WE ARE SETTING THE DERIVATIVE STATES IN THE TRANSATIONS OF THE ORIGINAL STATE
+    return moore_transactions
+
+
+def mealy_to_moore(mealy: dict)->dict:
+    new_states = treat_states(mealy)  # NEW STATES WITH THE STATE ORIGEM
+    # BEGIN THE CONSTRUCTION OF THE NEW MACHINE
+    moore = {}
+    moore["type"] = "moore"
+    moore["symbols_in"] = []
+    moore["symbols_out"] = []
+    moore["states"] = []
+    moore["start"] = []
+    moore["final"] = []
+    moore["trans"] = []
+    moore["out_fn"] = []
+    #SEETING THE INITAL SYMBOL
+    moore["start"] = mealy["start"][0]
+    #SETTING THE SYMBOLS_IN
+    moore["symbols_in"] = mealy["symbols_in"]
+    #SETTING THE SYMBOLS_OUT
+    moore["symbols_out"] = mealy["symbols_out"]
+    #SETTING THE FINALS SYMBOLS
+    moore["final"].extend(treat_final_symbols(new_states,mealy["final"]))
+    # SETTING THE NEW STATES AND THE OUT_FN INTO THE MOORE MACHINE
+    for state_created in new_states:
+        for derivative_state in state_created[1]:
+            moore["states"].append(derivative_state[0])
+        moore["out_fn"].extend(state_created[1])
+    # NOW WE WILL US THE INFORMATION TO CHECK ALL TRANSACTIONS FROM MEALY MACHINE AND REPLACE WITH THE NEW DATA
+    for mealy_transacions in mealy["trans"]:
+        new_destine_state = treat_out_transaction(
+            mealy_transacions, new_states) #HERE WE WILL CHANGE THE STATE DESTINATION USING THE NEW STATES THAT WE HAVE
+        moore_transactions = transform_transaction_to_moore(new_destine_state,new_states) #HERE WE WILL CREATE A LIST WITH THE ALL TRANSACTIONS OF THE STATE AND DERIVATE STATES
+        moore["trans"].extend(moore_transactions)
+    return moore
 
 def main():
     teste = ['mealy', ['symbols-in', 'a', 'b'], ['symbols-out', 0, 1], ['states', 'q0', 'q1', 'q2', 'q3'], ['start', 'q0'], ['finals', 'q3'], ['trans', ['q0', 'q1',
@@ -252,16 +202,10 @@ def main():
     #['moore', ['symbols-in', 'a', 'b'], ['symbols-out', 0, 1], ['states', 'q0', "q0'", 'q1', 'q2', 'q3', "q3'"], ['start', 'q0'], ['finals', 'q3',"q3'"], ['trans', ['q0', 'q1', 'a'], ['q0', 'q3', 'b'],["q0'","q1","a"],["q0'","q3","b"], ['q1', "q3'", 'a'], ['q1', 'q2', 'b'], ['q2', "q3", 'a'], ['q2', "q3'", 'b'], ['q3', "q3'", 'a'], ['q3', "q0'", 'b'], ["q3'", "q3'", 'a'], ["q3'", "q0'",'b']], ['out-fn', ['q0', []], ["q0'", 1], ['q1', 0], ['q2', 1], ['q3', 0], ["q3'", 1]]]
     maquina = list_to_machine(teste)
     show_machine(maquina)
-    show_machine(mealy_to_moore(maquina))
-    #show_machine (moore_to_mealy(maquina))
-    # print (maquina["type"])
-    # try:
-    #     for x in maquina["trans"]:
-    #         print(x)
-    #     for y in maquina["out_fn"]:
-    #         print(y)
-    # except Exception as err:
-    #     print("")
+    moore = mealy_to_moore(maquina)
+    show_machine(moore)
+    mealy = moore_to_mealy(moore)
+    show_machine(mealy)
     return 0
 
 
