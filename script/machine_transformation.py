@@ -15,6 +15,20 @@ def list_to_machine(lst_machine: list)->dict:
         machine["out_fn"] = lst_machine[7][1:]
     return machine
 
+# TRANSFORM A MACHINE INTO A LIST
+def machine_to_list(machine:dict)->list:
+    list_machine=[machine["type"],["symbols-in"],["symbols-out"],["states"],["start"],["finals"],["trans"]]
+    list_machine[1].extend(machine["symbols_in"])
+    list_machine[2].extend(machine["symbols_out"])
+    list_machine[3].extend(machine["states"])
+    list_machine[4].extend(machine["start"])
+    list_machine[5].extend(machine["final"])
+    list_machine[6].extend(machine["trans"])
+    if machine["type"].lower() == "moore":
+        list_machine.append(["out-fn"])
+        list_machine[7].extend(machine["out_fn"])
+    return list_machine
+
 # SHOW THE PARAMETERS OF THE MACHINE
 def show_machine(machine: dict):
     print("{0} MACHINE".format(machine["type"].upper()))
@@ -117,15 +131,15 @@ def treat_states(mealy: dict)->list:
             if transaction[1] == mealy_state and mealy_state == mealy["start"][0]:
                 if transaction[3] != [] and not check_output(transaction[3], outfn_mark):
                     outfn_mark.append(
-                        (mealy_state+random.choice(string.ascii_uppercase), transaction[3]))
+                        [mealy_state+random.choice(string.ascii_uppercase), transaction[3]])
             elif transaction[1] == mealy_state:
                 if not check_output(transaction[3], outfn_mark) and len(outfn_mark) > 0:
                     outfn_mark.append(
-                        (mealy_state+random.choice(string.ascii_uppercase), transaction[3]))
+                        [mealy_state+random.choice(string.ascii_uppercase), transaction[3]])
                 elif not check_output(transaction[3], outfn_mark) and len(outfn_mark) == 0:
-                    outfn_mark.append((mealy_state, transaction[3]))
+                    outfn_mark.append([mealy_state, transaction[3]])
         if mealy_state == mealy["start"][0]:
-            outfn_mark.append((mealy_state, []))
+            outfn_mark.append([mealy_state, []])
         treat.append(states_outfn(mealy_state, outfn_mark))
     return treat
 
@@ -190,12 +204,14 @@ def mealy_to_moore(mealy: dict)->dict:
 
 
 def main():
-    #teste = ['mealy', ['symbols-in', 'a', 'b'], ['symbols-out', 0, 1], ['states', 'q0', 'q1', 'q2', 'q3'], ['start', 'q0'], ['finals', 'q3'], ['trans', ['q0', 'q1',
-    #                                                                                                                                                     'a', 0], ['q0', 'q3', 'b', 0], ['q1', 'q2', 'b', 1], ['q1', 'q3', 'a', 1], ['q2', 'q3', 'a', 0], ['q2', 'q3', 'b', 1], ['q3', 'q0', 'b', 1], ['q3', 'q3', 'a', 1]]]
-    teste = ['moore', ['symbols-in', 'a', 'b'], ['symbols-out', 0, 1], ['states', 'q0', "q0'", 'q1', 'q2', 'q3', "q3'"], ['start', 'q0'], ['finals', 'q3',"q3'"], ['trans', ['q0', 'q1', 'a'], ['q0', 'q3', 'b'],["q0'","q1","a"],["q0'","q3","b"], ['q1', "q3'", 'a'], ['q1', 'q2', 'b'], ['q2', "q3", 'a'], ['q2', "q3'", 'b'], ['q3', "q3'", 'a'], ['q3', "q0'", 'b'], ["q3'", "q3'", 'a'], ["q3'", "q0'",'b']], ['out-fn', ['q0', 1], ["q0'", 1], ['q1', 0], ['q2', 1], ['q3', 0], ["q3'", 1]]]
+    teste = ['mealy', ['symbols-in', 'a', 'b'], ['symbols-out', 0, 1], ['states', 'q0', 'q1', 'q2', 'q3'], ['start', 'q0'], ['finals', 'q3'], ['trans', ['q0', 'q1',
+                                                                                                                                                         'a', 0], ['q0', 'q3', 'b', 0], ['q1', 'q2', 'b', 1], ['q1', 'q3', 'a', 1], ['q2', 'q3', 'a', 0], ['q2', 'q3', 'b', 1], ['q3', 'q0', 'b', 1], ['q3', 'q3', 'a', 1]]]
+    #teste = ['moore', ['symbols-in', 'a', 'b'], ['symbols-out', 0, 1], ['states', 'q0', "q0'", 'q1', 'q2', 'q3', "q3'"], ['start', 'q0'], ['finals', 'q3',"q3'"], ['trans', ['q0', 'q1', 'a'], ['q0', 'q3', 'b'],["q0'","q1","a"],["q0'","q3","b"], ['q1', "q3'", 'a'], ['q1', 'q2', 'b'], ['q2', "q3", 'a'], ['q2', "q3'", 'b'], ['q3', "q3'", 'a'], ['q3', "q0'", 'b'], ["q3'", "q3'", 'a'], ["q3'", "q0'",'b']], ['out-fn', ['q0', []], ["q0'", 1], ['q1', 0], ['q2', 1], ['q3', 0], ["q3'", 1]]]
     maquina = list_to_machine(teste)
     try:
-        moore_to_mealy(maquina)
+        print(machine_to_list(maquina))
+        #mealy_to_moore(maquina)
+
     except ValueError as err:
         print(err)
     # show_machine(maquina)
