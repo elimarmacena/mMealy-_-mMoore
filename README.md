@@ -15,7 +15,7 @@ Elimar Macena:      [elimarmacena](https://github.com/elimarmacena)<br>
   python3 exemplo_script.py
   ```  
   
-## 4. Nome e Modo de Uso do Programa<br>
+### 4. Nome e Modo de Uso do Programa<br>
   O nome escolhido para o programa desenvolvido é <i>Machine_Transformation</i>, por que afinal se trata de uma conversão de máquina. Para que seja feito uso do programa é necessário fazer uma chamada via linha de comando, no qual o usuário informa o input e também informar o seu output, para o cenário deste trabalho ambos devem ser um arquivo.<br>
   Exemplo:
 ```sh
