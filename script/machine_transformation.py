@@ -1,19 +1,42 @@
 import random
 import string
+from s_expression import print_sexp as out_sexp
+
+# VALIDATION OF THE ITENS RECIEVED
+def list_validation(lst:list)->bool:
+    # THE LIST OF DATE HAVE AN ORDER, CASE THE ORDER BE DIFFERENT WE THROW AN INFORMATION
+    try:
+        test = 100
+        typeMachine = lst[0]
+        test = lst[1].index('symbols-in')
+        test = lst[2].index('symbols-out')
+        test = lst[3].index('states')
+        test = lst[4].index('start')
+        test = lst[5].index('finals')
+        test = lst[6].index('trans')
+        if typeMachine.lower() == "moore":
+            test = lst[7].index('type')
+        return True
+    except ValueError:
+        return False
+    
 
 # TRANSFORM A LIST TO A MACHINE DICTIONARY
 def list_to_machine(lst_machine: list)->dict:
-    machine = {}
-    machine["type"] = lst_machine[0]
-    machine["symbols_in"] = lst_machine[1][1:]
-    machine["symbols_out"] = lst_machine[2][1:]
-    machine["states"] = lst_machine[3][1:]
-    machine["start"] = lst_machine[4][1:]
-    machine["final"] = lst_machine[5][1:]
-    machine["trans"] = lst_machine[6][1:]
-    if machine["type"].lower() == "moore":
-        machine["out_fn"] = lst_machine[7][1:]
-    return machine
+    if list_validation(lst_machine):
+        machine = {}
+        machine["type"] = lst_machine[0]
+        machine["symbols_in"] = lst_machine[1][1:]
+        machine["symbols_out"] = lst_machine[2][1:]
+        machine["states"] = lst_machine[3][1:]
+        machine["start"] = lst_machine[4][1:]
+        machine["final"] = lst_machine[5][1:]
+        machine["trans"] = lst_machine[6][1:]
+        if machine["type"].lower() == "moore":
+            machine["out_fn"] = lst_machine[7][1:]
+        return machine
+    else:
+        raise ValueError ("A entrada nao segue o padrao necessario para que seja gerado uma maquina.")
 
 # TRANSFORM A MACHINE INTO A LIST
 def machine_to_list(machine:dict)->list:
@@ -28,6 +51,11 @@ def machine_to_list(machine:dict)->list:
         list_machine.append(["out-fn"])
         list_machine[7].extend(machine["out_fn"])
     return list_machine
+
+# TRANSFORM A LIST INTO A SEXPRESSION
+def list_to_sexp(lst : list)->str:
+    sexp = out_sexp(lst)
+    return sexp
 
 # SHOW THE PARAMETERS OF THE MACHINE
 def show_machine(machine: dict):

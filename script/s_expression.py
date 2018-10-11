@@ -24,7 +24,7 @@ def parse_sexp(sexp):
             stack.append(out)
             out = []
         elif term == 'brackr':
-            assert stack, "Trouble with nesting of brackets"
+            assert stack, "Problema com os parênteses"
             tmpout, out = out, stack.pop(-1)
             out.append(tmpout)
         elif term == 'num':
@@ -37,7 +37,7 @@ def parse_sexp(sexp):
             out.append(value)
         else:
             raise NotImplementedError("Error: %r" % (term, value))
-    assert not stack, "Trouble with nesting of brackets"
+    assert not stack, "Problema com os parênteses"
     return out[0]
  
 def print_sexp(exp):
