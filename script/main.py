@@ -2,98 +2,110 @@ from sys import argv
 from typing import List
 from os import path
 
-from machine_transformation import *
-import s_expression
+import script.machine_transformation as MT
+import script.s_expression as SE
 
 
 def obter_nome_arqs(args: List[str]) -> dict:
+	"""
+	Processa a lista de argumentos e retorna um dicionário com os caminhos dos arq. de entrada e saída.
 
-    # Verifique se há exatamente 5 argumentos:
-    # Nome do prog., param. -i, path arq. de entrada, param. -o, path arq. saída
-    if (len(args) != 5):
-        print("#ERRO: Número incorreto de argumentos!")
-        exit(1)
+	Se algum argumento estiver ausente, então a execução é abortada.
+	:param args: Lista de argumentos obtidos via linha de comando
+	:return: Dicionário contendo os caminhos do arquivo de entrada("path_in") e de saída ("path_out")
+	"""
 
-    else:
-        dict_nome_arqs = {"path_in": None, "path_out": None}
+	# Verifique se há exatamente 5 argumentos:
+	# Nome do prog., param. -i, path arq. de entrada, param. -o, path arq. saída
+	if (len(args) != 5):
+		print("#ERRO: Número incorreto de argumentos!")
+		exit(1)
 
-        # Para cada arg, verifique se é um param. -i ou -o;
-        for i in range(1, len(args)):
+	else:
+		dict_nome_arqs = {"path_in": None, "path_out": None}
 
-            # Se o argumento atual for uma flag, E;
-            # houver um próximo argumento que NÃO seja uma flag;
-            # Pegue este próximo como caminho de um arquivo;
-            if args[i].lower() == "-i" and i < (len(args) - 1) and args[i + 1][0] != '-':
-                dict_nome_arqs["path_in"] = args[i + 1]
+		# Para cada arg, verifique se é um param. -i ou -o;
+		for i in range(1, len(args)):
 
-            elif args[i].lower() == "-o" and i < (len(args) - 1) and args[i + 1][0] != '-':
-                dict_nome_arqs["path_out"] = args[i + 1]
+			# Se o argumento atual for uma flag, E;
+			# houver um próximo argumento que NÃO seja uma flag;
+			# Pegue este próximo como caminho de um arquivo;
+			if args[i].lower() == "-i" and i < (len(args) - 1) and args[i + 1][0] != '-':
+				dict_nome_arqs["path_in"] = args[i + 1]
 
-        if not dict_nome_arqs["path_in"]:
-            print("#ERRO: Path do arquivo de entrada ou argumento '-i' não declarado!")
-            exit(1)
+			elif args[i].lower() == "-o" and i < (len(args) - 1) and args[i + 1][0] != '-':
+				dict_nome_arqs["path_out"] = args[i + 1]
 
-        elif not dict_nome_arqs["path_out"]:
-            print("#ERRO: Path do arquivo de saída ou argumento '-o' não declarado!")
-            exit(1)
+		if not dict_nome_arqs["path_in"]:
+			print("#ERRO: Path do arquivo de entrada ou argumento '-i' não declarado!")
+			exit(1)
 
-        return dict_nome_arqs
+		elif not dict_nome_arqs["path_out"]:
+			print("#ERRO: Path do arquivo de saída ou argumento '-o' não declarado!")
+			exit(1)
 
+		return dict_nome_arqs
 
-def arq_sexpression_to_list(path_arq: str) -> List:
+def arq_sexp_para_lista(path_arq: str) -> List:
+	"""
+	Processa a S-Expression do arquivo do path recebido e converte para uma lista.
 
-    # Se o arquivo de entrada não existir, aborte a execução;
-    if not path.exists(path_arq):
-        print("#ERRO: Arquivo '%s' não encontrado, verifique o caminho." % path_arq)
-        exit(1)
+	Se o caminho não existe de fato, então a execução é abortada.
+	:param path_arq: Caminho do arquivo da S-Expression de entrada.
+	:return: Lista obtida a partir da S-Expression (a ser convertida para máquina)
+	"""
 
-    with open(path_arq, 'r') as arq_in:
-        return s_expression.parse_sexp(arq_in.read())
+	# Se o arquivo de entrada não existir ou for uma pasta, aborte a execução;
+	if not path.isfile(path_arq):
+		print("#ERRO: O path '%s' não corresponde a um arquivo, verifique o caminho." % path_arq)
+		exit(1)
 
-def list_to_arq_sexpression(lista_maquina: List, nome_arq_saida: str):
-    #TODO já há método p/ converter de S-Exp. p/ lista, mas há p/ o inverso?
-    pass
+	with open(path_arq, 'r') as arq:
+		return SE.parse_sexp(arq.read())
+
+def lista_para_arq_sexp(lista_maquina: List, caminho_arq_saida: str):
+	"""
+	Converte a lista recebida para S-Expression e a escreve no path do arquivo de saída.
+
+	:param lista_maquina: Lista que representa a máquina
+	:param nome_arq_saida: Caminho em que o arquivo com a S-Expression será escrito
+	"""
+
+	with open(caminho_arq_saida, 'w') as arq:
+		arq.write(SE.print_sexp(lista_maquina))
+
+	return 0
+
 
 def main(args: List[str]):
 
-    #---EXEMPLO de conversão de um txt S-EXP MEALY obtido via CLI p/ máquina---#
+	# Verifica se os argumentos estão corretos e obtém os paths dos arquivos;
+	dict_nome_arqs = obter_nome_arqs(args)
 
+	# Converte a S-Expression do path do arquivo de entrada para lista;
+	lista = arq_sexp_para_lista(dict_nome_arqs["path_in"])
 
-    # Verifica se os argumentos estão corretos e obtém os paths dos arquivos;
-    dict_nome_arqs = obter_nome_arqs(args)
+	# Converte de lista para máquina (dict) e imprime a máquina;
+	maquina = MT.list_to_machine(lista)
 
-    # Converte a S-Expression do path do arquivo de entrada para lista;
-    lista = arq_sexpression_to_list(dict_nome_arqs["path_in"])
+	nova_maquina = None
 
-    # Converte de lista para máquina (dict) e imprime a máquina;
-    show_machine(list_to_machine(lista))
+	# Se a máquina for de Moore, converta para Mealy;
+	if MT.check_kind_machine(maquina) == 1:
+		nova_maquina = MT.moore_to_mealy(maquina)
 
-    
-    #---FIM EXEMPLO---#
+	# Se a máquina for de Mealy, converta para Moore
+	elif MT.check_kind_machine(maquina) == 2:
+		nova_maquina = MT.mealy_to_moore(maquina)
 
-    teste = ['moore', ['symbols-in', 'a', 'b'], ['symbols-out', 0, 1], ['states', 'q0', "q0'", 'q1', 'q2', 'q3', "q3'"],
-             ['start', 'q0'], ['finals', 'q3', "q3'"],
-             ['trans', ['q0', 'q1', 'a'], ['q0', 'q3', 'b'], ["q0'", "q1", "a"], ["q0'", "q3", "b"], ['q1', "q3'", 'a'],
-              ['q1', 'q2', 'b'], ['q2', "q3", 'a'], ['q2', "q3'", 'b'], ['q3', "q3'", 'a'], ['q3', "q0'", 'b'],
-              ["q3'", "q3'", 'a'], ["q3'", "q0'", 'b']],
-             ['out-fn', ['q0', []], ["q0'", 1], ['q1', 0], ['q2', 1], ['q3', 0], ["q3'", 1]]]
-    maquina = list_to_machine(teste)
+	else:
+		raise ValueError("#ERRO: O tipo da máquina é desconhecido!")
 
-    try:
-        show_machine(maquina)
-        # mealy_to_moore(maquina)
+	# Escreva a nova máquina no caminho do arquivo de saída;
+	lista_para_arq_sexp(MT.machine_to_list(nova_maquina), dict_nome_arqs["path_out"])
 
-    except ValueError as err:
-        print(err)
-    # show_machine(maquina)
-    # moore = mealy_to_moore(maquina)
-    # show_machine(moore)
-    # mealy = moore_to_mealy(moore)
-    # show_machine(mealy)
-    # show_machine(mealy_to_moore(mealy))
-
-    return 0
+	return 0
 
 
 if __name__ == '__main__':
-    main(argv)
+	main(argv)

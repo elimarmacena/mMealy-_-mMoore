@@ -1,7 +1,7 @@
-
 ##FONTE https://rosettacode.org/wiki/S-Expressions#Python
 import re
- 
+from typing import List
+
 dbg = False
  
 term_regex = r'''(?mx)
@@ -13,7 +13,7 @@ term_regex = r'''(?mx)
         (?P<s>[^(^)\s]+)
        )'''
  
-def parse_sexp(sexp):
+def parse_sexp(sexp) -> List:
     stack = []
     out = []
     if dbg: print("%-6s %-14s %-44s %-s" % tuple("term value out stack".split()))
@@ -40,7 +40,7 @@ def parse_sexp(sexp):
     assert not stack, "Problema com os parênteses"
     return out[0]
  
-def print_sexp(exp):
+def print_sexp(exp) -> str:
     out = ''
     if type(exp) == type([]):
         out += '(' + ' '.join(print_sexp(x) for x in exp) + ')'
