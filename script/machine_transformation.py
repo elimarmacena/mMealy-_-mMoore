@@ -8,7 +8,7 @@ def check_kind_machine(machine : dict) -> int:
 	if (machine["type"].lower() == "moore"):
 		return 1
 	elif (machine["type"].lower() == "mealy"):
-		return 0
+		return 2
 	else:
 		return -1
 
