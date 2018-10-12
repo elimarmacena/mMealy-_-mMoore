@@ -5,9 +5,9 @@ from s_expression import print_sexp as out_sexp
 # CHECK WHAT A KIND OF MACHINE IS
 # 1 EQUALS MOORE || 2 EQUALS MEALY || -1 TYPE INVALID
 def check_kind_machine(machine : dict) -> int:
-	if (machine["type"].lower() == "moore":
+	if (machine["type"].lower() == "moore"):
 		return 1
-	elif (machine["type"].lower() == "mealy":
+	elif (machine["type"].lower() == "mealy"):
 		return 0
 	else:
 		return -1
@@ -25,7 +25,7 @@ def list_validation(lst:list)->bool:
         test = lst[5].index('finals')
         test = lst[6].index('trans')
         if typeMachine.lower() == "moore":
-            test = lst[7].index('type')
+            test = lst[7].index('out-fn')
         return True
     except ValueError:
         return False
@@ -209,7 +209,7 @@ def transform_transaction_to_moore(transaction: list, new_states: list):
 
 # TRNASFORMATION MEALY MACHINE IN MOORE
 def mealy_to_moore(mealy: dict)->dict:
-	if (check_kind_machine(mealy) == 2:
+	if (check_kind_machine(mealy) == 2):
 		new_states = treat_states(mealy)  # NEW STATES WITH THE STATE ORIGEM
 		# BEGIN THE CONSTRUCTION OF THE NEW MACHINE
 		moore = {}
