@@ -2,6 +2,16 @@ import random
 import string
 from s_expression import print_sexp as out_sexp
 
+# CHECK WHAT A KIND OF MACHINE IS
+# 1 EQUALS MOORE || 2 EQUALS MEALY || -1 TYPE INVALID
+def check_kind_machine(machine : dict) -> int:
+	if (machine["type"].lower() == "moore":
+		return 1
+	elif (machine["type"].lower() == "mealy":
+		return 0
+	else:
+		return -1
+
 # VALIDATION OF THE ITENS RECIEVED
 def list_validation(lst:list)->bool:
     # THE LIST OF DATE HAVE AN ORDER, CASE THE ORDER BE DIFFERENT WE THROW AN INFORMATION
@@ -105,22 +115,25 @@ def treat_transaction_moore(mealy: dict, moore: dict):
 # TRANSFORME A MOORE MACHINE INTO A MEALY MACHINE
 def moore_to_mealy(moore_machine: dict)->dict:
     # CHECK OF THE POSSIBLLITY TO TRANSFORM THE MACHINE
-    if (moore_intransitive(moore_machine)):
-        raise ValueError(
-            "Nao é possivel converver esta marquina para mealy pois possui saidas no seu estado inicial")
-    else:
-        # IN THIS POINT THE MACHINE WILL BE THE SAME AS THE MOORE MACHINE
-        mealy_machine = {}
-        mealy_machine["type"] = "mayle"
-        mealy_machine["symbols_in"] = moore_machine["symbols_in"][:]
-        mealy_machine["symbols_out"] = moore_machine["symbols_out"][:]
-        mealy_machine["states"] = moore_machine["states"][:]
-        mealy_machine["start"] = moore_machine["start"][:]
-        mealy_machine["final"] = moore_machine["final"][:]
-        # HERE WE MAKE A TRANSFORMATION FROM A STATE OUTPUT INTO A TRANSATION OUTPUT
-        mealy_machine["trans"] = treat_transaction_moore(
-            mealy_machine, moore_machine)
-        return mealy_machine
+	if (check_kind_machine(moore_machine) == 1):
+		if (moore_intransitive(moore_machine)):
+			raise ValueError(
+				"Nao é possivel converver esta marquina para mealy pois possui saidas no seu estado inicial")
+		else:
+			# IN THIS POINT THE MACHINE WILL BE THE SAME AS THE MOORE MACHINE
+			mealy_machine = {}
+			mealy_machine["type"] = "mealy"
+			mealy_machine["symbols_in"] = moore_machine["symbols_in"][:]
+			mealy_machine["symbols_out"] = moore_machine["symbols_out"][:]
+			mealy_machine["states"] = moore_machine["states"][:]
+			mealy_machine["start"] = moore_machine["start"][:]
+			mealy_machine["final"] = moore_machine["final"][:]
+			# HERE WE MAKE A TRANSFORMATION FROM A STATE OUTPUT INTO A TRANSATION OUTPUT
+			mealy_machine["trans"] = treat_transaction_moore(
+				mealy_machine, moore_machine)
+			return mealy_machine
+	else:
+		raise ValueError ( "Não é possivel converter a maquina para Mealy por a maquina informada nao é do tipo Moore" )
 
 # USED TO ESTABLISH THE FINAL STATES IN THE MOORE MACHINE
 def treat_final_symbols(new_states: list, finals_mealy: list):
@@ -150,7 +163,7 @@ def states_outfn(state: str, out_fn: list)->list:
 
 
 # RECIEVE A MEALY MACHINE AND CREATE A LIST WITH THE STATE OF THE MEALY MACHINE AND THE STATES(NEW INCLUDE) AND OUT_FNS
-# STRUCT [[MEALY_STATE[(STATE,OUTPUT),....]], [MEALY_STATE[(STATE,OUTPUT),....]]....]
+# STRUCT [[MEALY_STATE[[STATE,OUTPUT],....]], [MEALY_STATE[[STATE,OUTPUT],....]]....]
 def treat_states(mealy: dict)->list:
     treat = []
     for mealy_state in mealy["states"]:
@@ -196,36 +209,39 @@ def transform_transaction_to_moore(transaction: list, new_states: list):
 
 # TRNASFORMATION MEALY MACHINE IN MOORE
 def mealy_to_moore(mealy: dict)->dict:
-    new_states = treat_states(mealy)  # NEW STATES WITH THE STATE ORIGEM
-    # BEGIN THE CONSTRUCTION OF THE NEW MACHINE
-    moore = {}
-    moore["type"] = "moore"
-    moore["symbols_in"] = []
-    moore["symbols_out"] = []
-    moore["states"] = []
-    moore["start"] = []
-    moore["final"] = []
-    moore["trans"] = []
-    moore["out_fn"] = []
-    # SEETING THE INITAL SYMBOL
-    moore["start"] = mealy["start"][:]
-    # SETTING THE SYMBOLS_IN
-    moore["symbols_in"] = mealy["symbols_in"]
-    # SETTING THE SYMBOLS_OUT
-    moore["symbols_out"] = mealy["symbols_out"]
-    # SETTING THE FINALS SYMBOLS
-    moore["final"].extend(treat_final_symbols(new_states, mealy["final"]))
-    # SETTING THE NEW STATES AND THE OUT_FN INTO THE MOORE MACHINE
-    for state_created in new_states:
-        for derivative_state in state_created[1]:
-            moore["states"].append(derivative_state[0])
-        moore["out_fn"].extend(state_created[1])
-    # NOW WE WILL US THE INFORMATION TO CHECK ALL TRANSACTIONS FROM MEALY MACHINE AND REPLACE WITH THE NEW DATA
-    for mealy_transacions in mealy["trans"]:
-        new_destine_state = treat_out_transaction(
-            mealy_transacions, new_states)  # HERE WE WILL CHANGE THE STATE DESTINATION USING THE NEW STATES THAT WE HAVE
-        # HERE WE WILL CREATE A LIST WITH THE ALL TRANSACTIONS OF THE STATE AND DERIVATE STATES
-        moore_transactions = transform_transaction_to_moore(
-            new_destine_state, new_states)
-        moore["trans"].extend(moore_transactions)
-    return moore
+	if (check_kind_machine(mealy) == 2:
+		new_states = treat_states(mealy)  # NEW STATES WITH THE STATE ORIGEM
+		# BEGIN THE CONSTRUCTION OF THE NEW MACHINE
+		moore = {}
+		moore["type"] = "moore"
+		moore["symbols_in"] = []
+		moore["symbols_out"] = []
+		moore["states"] = []
+		moore["start"] = []
+		moore["final"] = []
+		moore["trans"] = []
+		moore["out_fn"] = []
+		# SEETING THE INITAL SYMBOL
+		moore["start"] = mealy["start"][:]
+		# SETTING THE SYMBOLS_IN
+		moore["symbols_in"] = mealy["symbols_in"]
+		# SETTING THE SYMBOLS_OUT
+		moore["symbols_out"] = mealy["symbols_out"]
+		# SETTING THE FINALS SYMBOLS
+		moore["final"].extend(treat_final_symbols(new_states, mealy["final"]))
+		# SETTING THE NEW STATES AND THE OUT_FN INTO THE MOORE MACHINE
+		for state_created in new_states:
+			for derivative_state in state_created[1]:
+				moore["states"].append(derivative_state[0])
+			moore["out_fn"].extend(state_created[1])
+		# NOW WE WILL US THE INFORMATION TO CHECK ALL TRANSACTIONS FROM MEALY MACHINE AND REPLACE WITH THE NEW DATA
+		for mealy_transacions in mealy["trans"]:
+			new_destine_state = treat_out_transaction(
+				mealy_transacions, new_states)  # HERE WE WILL CHANGE THE STATE DESTINATION USING THE NEW STATES THAT WE HAVE
+			# HERE WE WILL CREATE A LIST WITH THE ALL TRANSACTIONS OF THE STATE AND DERIVATE STATES
+			moore_transactions = transform_transaction_to_moore(
+				new_destine_state, new_states)
+			moore["trans"].extend(moore_transactions)
+		return moore
+	else:
+		raise ValueError("Nao é possive converter a maquina para Moore pois a maquina é do tipo Mealy")
