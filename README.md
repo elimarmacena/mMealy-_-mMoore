@@ -101,12 +101,12 @@ Elimar Macena:      [elimarmacena](https://github.com/elimarmacena)<br>
 #### 5.2.3 Exemplo 3<br>
 ```
 (mealy 
-(symbols-in A B C) 
+(symbols-in A B C E) 
 (symbols-out L F A) 
 (states q0 q1 q2 q3 q4 q5 q6 q7 q8 q9) 
 (start q0) 
 (finals q9) 
-(trans (q0 q1 A A) (q0 q5 B L) (q1 q2 A L) (q2 q3 A F) (q2 q4 C F) (q3 q4 A A) (q4 q9 A A) (q5 q0 C F) (q5 q6 B F) (q5 q8 C F) (q5 q9 A F) (q6 q7 C A) (q7 q5 B L) (q7 q8 C L) (q8 q9 C F)))
+(trans (q0 q1 A A) (q0 q5 B L) (q1 q2 A L) (q2 q3 A F) (q2 q4 C F) (q3 q4 A A) (q4 q9 A A) (q5 q0 E F) (q5 q6 B F) (q5 q8 C F) (q5 q9 A F) (q6 q7 C A) (q7 q5 B L) (q7 q8 C L) (q8 q9 C F)))
 ```
 [desenho do autômato](https://github.com/elimarmacena/mMealy-_-mMoore/blob/master/automatos/MEALY_IMAGEM/AUTOMATO_03_MEALY.svg)<br>
 [desenho da conversão](https://github.com/elimarmacena/mMealy-_-mMoore/blob/master/automatos/MEALY_IMAGEM/AUTOMATO_03_MEALY_CONVERTED.svg)
