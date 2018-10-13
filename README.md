@@ -54,7 +54,7 @@ Elimar Macena:      [elimarmacena](https://github.com/elimarmacena)<br>
 (start q0) 
 (finals q3) 
 (trans (q0 q1 A) (q0 q2 B) (q2 q1 B)(q2 q3 C) (q1 q2 A) (q1 q3 C)) 
-(out-fn (q0 ()) (q1 0) (q2 1) (q4 2)))
+(out-fn (q0 ()) (q1 0) (q2 1) (q3 2)))
 ```
 [desenho do autômato](https://github.com/elimarmacena/mMealy-_-mMoore/blob/master/automatos/MOORE_IMAGEM/AUTOMATO_02_MOORE.svg)<br>
 [desenho da conversão](https://github.com/elimarmacena/mMealy-_-mMoore/blob/master/automatos/MOORE_IMAGEM/AUTOMATO_02_MOORE_CONVERTED.svg)
