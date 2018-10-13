@@ -53,7 +53,7 @@ def list_to_machine(lst_machine: list)->dict:
 			machine["out_fn"] = lst_machine[7][1:]
 		return machine
 	else:
-		raise ValueError ("A entrada nao segue o padrao necessario para que seja gerado uma maquina.")
+		raise ValueError ("A entrada não segue o padrão necessário para que uma máquina seja gerada.")
 
 # TRANSFORM A MACHINE INTO A LIST
 def machine_to_list(machine:dict)->list:
@@ -221,7 +221,7 @@ def mealy_to_moore(mealy: dict)->dict:
 			moore["trans"].extend(moore_transactions)
 		return moore
 	else:
-		raise ValueError("Nao é possive converter a maquina para Moore pois a maquina é do tipo Mealy")
+		raise ValueError("Nao é possível converter a máquina para Moore, pois a máquina não é do tipo Mealy")
 
 # TRANSFORM A MOORE MACHINE INTO A MEALY MACHINE
 def moore_to_mealy(moore_machine: dict)->dict:
@@ -229,7 +229,7 @@ def moore_to_mealy(moore_machine: dict)->dict:
 	if (check_kind_machine(moore_machine) == 1):
 		if (__moore_intransitive(moore_machine)):
 			raise ValueError(
-				"Nao é possivel converver esta marquina para mealy pois possui saidas no seu estado inicial")
+				"Nao é possível converver esta máquina para Mealy, pois possui saída(s) no seu estado inicial")
 		else:
 			# IN THIS POINT THE MACHINE WILL BE THE SAME AS THE MOORE MACHINE
 			mealy_machine = {}
@@ -240,8 +240,7 @@ def moore_to_mealy(moore_machine: dict)->dict:
 			mealy_machine["start"] = moore_machine["start"][:]
 			mealy_machine["final"] = moore_machine["final"][:]
 			# HERE WE MAKE A TRANSFORMATION FROM A STATE OUTPUT INTO A TRANSATION OUTPUT
-			mealy_machine["trans"] = __treat_transaction_moore(
-				mealy_machine, moore_machine)
+			mealy_machine["trans"] = __treat_transaction_moore(moore_machine)
 			return mealy_machine
 	else:
-		raise ValueError ( "Não é possivel converter a maquina para Mealy por a maquina informada nao é do tipo Moore" )
+		raise ValueError ( "Não é possível converter a máquina para Mealy, pois a máquina informada não é do tipo Moore" )
