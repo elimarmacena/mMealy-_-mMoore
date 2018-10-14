@@ -1,5 +1,5 @@
 # Autômatos Finitos com Saída - Máquinas de Mealy e de Moore<br>
-&nbsp; Repositório destinado para o trabalho ministrado na disciplina de Linguagens Formais e Autômatos
+Repositório destinado para o trabalho ministrado na disciplina de Linguagens Formais e Autômatos
 
 # SUMÁRIO<br>
 
@@ -8,36 +8,37 @@ Antônio Carlos D.:  [duraes-antonio](https://github.com/duraes-antonio)<br>
 Elimar Macena:      [elimarmacena](https://github.com/elimarmacena)<br>
 
 ### 2. Descrição do Código<br>
-&nbsp;&nbsp;O código desenvolvido para este trabalho foi construído utilizando a linguagem <i>Python</i>, a qual, para os integrantes, foi a que mostrou maior facilidade de resolução do problema proposto. O código foi desenvolvido seguindo o paradigma procedural, pois não foi visto uma necessidade de utilizar orientação objeto para a resolução do problema.<br>
+O código desenvolvido para este trabalho foi construído utilizando a linguagem <i>Python</i>, a qual, para os integrantes, foi a que mostrou maior facilidade de resolução do problema proposto. O código foi desenvolvido seguindo o paradigma procedural, pois não foi visto uma necessidade de utilizar orientação objeto para a resolução do problema.<br><br>
  
-&nbsp;&nbsp;Na questão de organização lógica e metodologia utilizada para resolver o problema, foi trabalhado da seguinte maneira, ao receber a S-expression a mesma é convertida numa lista, o que torna mais fácil o procedimento de validação dos dados informados, e então a máquina é elaborada sob a estrutura de dicionário do <i>Python</i>.<br>
+Na questão de organização lógica e metodologia utilizada para resolver o problema, foi trabalhado da seguinte maneira, ao receber a <i>S-expression</i> a mesma é convertida numa lista, o que torna mais fácil o procedimento de validação dos dados informados, e então a máquina é elaborada sob a estrutura de dicionário do <i>Python</i>.<br><br>
  
-&nbsp;&nbsp;Ao se tratar de equivalência de máquina não houve grande dificuldade de se converter de <i>Moore</i> para <i>Mealy</i>. Primeiro, o código avalia se a mesma pode ser convertida para <i>Mealy</i>, caso seja, então são feitos os procedimentos necessários, que neste caso é checado a transição que está sendo feita e colocado o caractere de saída do estado da máquina de Moore na transição.<br>
+Ao se tratar de equivalência de máquina não houve grande dificuldade de se converter de <i>Moore</i> para <i>Mealy</i>. Primeiro, o código avalia se a mesma pode ser convertida para <i>Mealy</i>, caso seja, então são feitos os procedimentos necessários, que neste caso é checado a transição que está sendo feita e colocado o caractere de saída do estado da máquina de Moore na transição.<br><br>
 
-&nbsp;&nbsp;A maior dificuldade encontrada foi na questão de resolução da equivalência de <i>Mealy</i> para <i>Moore</i>, mas o problema proposto foi resolvido da seguinte maneira, o código avalia as transições feitas para cada estado, checa se existe a necessidade de criar outro estado, faz a ligação do estado com o caractere de saída e também guarda o estado da máquina de <i>Mealy</i> que o mesmo se originou. Após isto, são criadas as novas transações, copiando as transações antigas e substituindo os estados da máquina de <i>Mealy</i> para os estados derivados utilizados na máquina de <i>Moore</i>, por fim os caracteres de saída da transação são removidos, deixando-os apenas nos estados.<br>
+A maior dificuldade encontrada foi na questão de resolução da equivalência de <i>Mealy</i> para <i>Moore</i>, mas o problema proposto foi resolvido da seguinte maneira, o código avalia as transições feitas para cada estado, checa se existe a necessidade de criar outro estado, faz a ligação do estado com o caractere de saída e também guarda o estado da máquina de <i>Mealy</i> que o mesmo se originou. Após isto, são criadas as novas transações, copiando as transações antigas e substituindo os estados da máquina de <i>Mealy</i> para os estados derivados utilizados na máquina de <i>Moore</i>, por fim os caracteres de saída da transação são removidos, deixando-os apenas nos estados.<br><br>
 
-&nbsp;&nbsp;O arquivo "main.py", aplicação, é responsável por receber os argumentos, verificar se o arquivo de entrada existe, abri-lo e convertê-lo para lista, de lista para máquina, identificar o tipo da máquina e invocar o método de conversão de acordo com o tipo obtido. Por fim, converte a nova máquina para S-Expression e a escreve em um novo arquivo, criado no caminho de saída recebido como argumento.<br>
+O arquivo "<i>main.py</i>", aplicação, é responsável por receber os argumentos, verificar se o arquivo de entrada existe, abri-lo e convertê-lo para lista, de lista para máquina, identificar o tipo da máquina e invocar o método de conversão de acordo com o tipo obtido. Por fim, converte a nova máquina para <i>S-expression</i> e a escreve em um novo arquivo, criado no caminho de saída recebido como argumento.<br><br>
 
 ### 3. Procedimento para compilação do trabalho<br>
 
-&nbsp;&nbsp;Todos os módulos usados ("argparse", "path", "random", "string" e "typing") são suportados nativamente pela linguagem em sua versão 3.5 ou superior, aliado ao fato de Python ser uma linguagem interpretada, o uso do programa dispensa, portanto, arquivos para gerência de dependências, compilação ou construção(build) do executável.<br>
+Todos os módulos usados ("<i>argparse</i>", "<i>path</i>", "<i>random</i>", "<i>string</i>" e "<i>typing</i>") são suportados nativamente pela linguagem em sua versão 3.5 ou superior, aliado ao fato de <i>Python</i> ser uma linguagem interpretada, o uso do programa dispensa, portanto, arquivos para gerência de dependências, compilação ou construção(<i>build</i>) do executável.<br><br>
   
 ### 4. Nome e Modo de Uso do Programa<br>
-&nbsp;&nbsp;O nome escolhido para o programa desenvolvido é <i>Machine_Transformation</i>, porque, afinal, se trata de uma conversão de máquina.<br>
+O nome escolhido para o programa desenvolvido é <i>Machine_Transformation</i>, porque, afinal, se trata de uma conversão de máquina.<br><br>
 
-&nbsp;&nbsp;Para que seja feito o uso do programa, é necessário informar o caminho do arquivo de entrada e também informar o caminho do arquivo de saída. Somente o arquivo de entrada deve existir.<br>
+Para que seja feito o uso do programa, é necessário informar o caminho do arquivo de entrada e também informar o caminho do arquivo de saída. Somente o arquivo de entrada deve existir.<br><br>
 
-&nbsp;&nbsp;Exemplo:
+Exemplo:
 ```shell
 python3 main.py -i arquivoOrigem.txt -o arquivoDestino.txt
 ```
->-i: Indica que o próx. arg. é o caminho do arquivo de entrada contendo a máquina(a ser convertida) em s-expression.<br>
->-o: Indica que o próx. arg. é o caminho do arquivo de saída, que conterá a máquina convertida (em s-expression).
+>-i: Indica que o próx. arg. é o caminho do arquivo de entrada contendo a máquina(a ser convertida) em <i>S-expression</i>.<br>
+>-o: Indica que o próx. arg. é o caminho do arquivo de saída, que conterá a máquina convertida (em <i>S-expression</i>).
 
-<br>&nbsp;&nbsp;É necessário executar o programa utilizando a linguagem <i>Python</i> em sua versão 3.5 ou mais recente (devido o uso de recursos como <i>typing</i>).
+<br><br>
+É necessário executar o programa utilizando a linguagem <i>Python</i> em sua versão 3.5 ou mais recente (devido o uso de recursos como <i>typing</i>).<br><br>
 
 ### 5. Exemplos de maquina<br>
-#### 5.1 Moore <br> 
+#### 5.1 <i>Moore</i> <br> 
 ##### 5.1.1 Exemplo 1<br>
 ```
 (moore 
@@ -84,7 +85,7 @@ python3 main.py -i arquivoOrigem.txt -o arquivoDestino.txt
 ```
 [desenho do autômato](https://github.com/elimarmacena/mMealy-_-mMoore/blob/master/automatos/MOORE_IMAGEM/AUTOMATO_03_MOORE.svg)<br>
 [desenho da conversão](https://github.com/elimarmacena/mMealy-_-mMoore/blob/master/automatos/MOORE_IMAGEM/AUTOMATO_03_MOORE_CONVERTED.svg)
-#### 5.2 Mealy <br> 
+#### 5.2 <i>Mealy</i> <br> 
 #### 5.2.1 Exemplo 1<br>
 ```
 (mealy 
@@ -134,8 +135,8 @@ python3 main.py -i arquivoOrigem.txt -o arquivoDestino.txt
 
 
 ### 6. Informacoes Complementares ao Trabalho<br>
-&nbsp;Para o desenvolvimento deste trabalho foi necessário manusear <i>s_expression</i>, como ambos do grupo não possuíam conhecimento com este formato foi optado por utilizar o código disponibilizado no seguinte link [ROSETTACODE](https://rosettacode.org/wiki/S-Expressions#Python), referência no qual é expressa no arquivo utilizado para a leitura e conversão de <i>s_expression</i>.<br>
+Para o desenvolvimento deste trabalho foi necessário manusear <i>S-expression</i>, como ambos do grupo não possuíam conhecimento com este formato foi optado por utilizar o código disponibilizado no seguinte link [ROSETTACODE](https://rosettacode.org/wiki/S-Expressions#Python), referência no qual é expressa no arquivo utilizado para a leitura e conversão de <i>s_expression</i>.<br><br>
 
-&nbsp; Para desenhar os automatos disponiveis no repositorio foi utilizado a ferramenta [Draw.io](https://www.draw.io/)
+Para desenhar os automatos disponiveis no repositorio foi utilizado a ferramenta [Draw.io](https://www.draw.io/)<br><br>
 
-   有難う
+
