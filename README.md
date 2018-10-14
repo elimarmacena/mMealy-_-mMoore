@@ -16,7 +16,13 @@ Ao se tratar de equivalência de máquina não houve grande dificuldade de se co
 
 A maior dificuldade encontrada foi na questão de resolução da equivalência de <i>Mealy</i> para <i>Moore</i>, mas o problema proposto foi resolvido da seguinte maneira, o código avalia as transições feitas para cada estado, checa se existe a necessidade de criar outro estado, faz a ligação do estado com o caractere de saída e também guarda o estado da máquina de <i>Mealy</i> que o mesmo se originou. Após isto, são criadas as novas transações, copiando as transações antigas e substituindo os estados da máquina de <i>Mealy</i> para os estados derivados utilizados na máquina de <i>Moore</i>, por fim os caracteres de saída da transação são removidos, deixando-os apenas nos estados.<br><br>
 
-O arquivo "<i>main.py</i>", aplicação, é responsável por receber os argumentos, verificar se o arquivo de entrada existe, abri-lo e convertê-lo para lista, de lista para máquina, identificar o tipo da máquina e invocar o método de conversão de acordo com o tipo obtido. Por fim, converte a nova máquina para <i>S-expression</i> e a escreve em um novo arquivo, criado no caminho de saída recebido como argumento.<br><br>
+O arquivo "<i>main.py</i>", aplicação, é responsável por receber os argumentos, verificar se o arquivo de entrada existe, abri-lo e convertê-lo para lista, de lista para máquina, identificar o tipo da máquina e invocar o método de conversão de acordo com o tipo obtido. Por fim, converte a nova máquina para <i>S-expression</i> e a escreve em um novo arquivo, criado no caminho de saída recebido como argumento.<br>
+
+* "machine_transformation.py": Contém as funções para converter de lista para máquina (vice-versa), de máquina Mealy para Moore (vice-versa).<br>
+
+* "s_expression.py": Contém as funções para converter uma S-Expression (em string) em uma lista e vice-versa.<br>
+
+* "main.py": Responsável por tratar os argumentos, ler/escrever conteúdo do/no arquivo, converter o conteúdo para o tipo adequado e identificar qual função de conversão de máquina deve ser invocada.<br><br>
 
 ### 3. Procedimento para compilação do trabalho<br>
 
