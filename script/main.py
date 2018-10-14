@@ -2,7 +2,7 @@ from typing import List
 from os import path
 import argparse
 
-import machine_transformation as MT
+import deus_ex_machina as MT
 import s_expression as SE
 
 parser = argparse.ArgumentParser()

@@ -18,7 +18,7 @@ A maior dificuldade encontrada foi na questão de resolução da equivalência d
 
 O arquivo "<i>main.py</i>", aplicação, é responsável por receber os argumentos, verificar se o arquivo de entrada existe, abri-lo e convertê-lo para lista, de lista para máquina, identificar o tipo da máquina e invocar o método de conversão de acordo com o tipo obtido. Por fim, converte a nova máquina para <i>S-expression</i> e a escreve em um novo arquivo, criado no caminho de saída recebido como argumento.<br>
 
-* "machine_transformation.py": Contém as funções para converter de lista para máquina (vice-versa), de máquina Mealy para Moore (vice-versa).<br>
+* "deus_ex_machina.py": Contém as funções para converter de lista para máquina (vice-versa), de máquina Mealy para Moore (vice-versa).<br>
 
 * "s_expression.py": Contém as funções para converter uma S-Expression (em string) em uma lista e vice-versa.<br>
 
@@ -29,7 +29,7 @@ O arquivo "<i>main.py</i>", aplicação, é responsável por receber os argument
 Todos os módulos usados ("<i>argparse</i>", "<i>path</i>", "<i>random</i>", "<i>string</i>" e "<i>typing</i>") são suportados nativamente pela linguagem em sua versão 3.5 ou superior, aliado ao fato de <i>Python</i> ser uma linguagem interpretada, o uso do programa dispensa, portanto, arquivos para gerência de dependências, compilação ou construção(<i>build</i>) do executável.<br><br>
   
 ### 4. Nome e Modo de Uso do Programa<br>
-O nome escolhido para o programa desenvolvido é <i>Machine_Transformation</i>, porque, afinal, se trata de uma conversão de máquina.<br><br>
+O nome escolhido para o programa desenvolvido é <i>deus_ex_machina</i>, porque nas primeiras tentativas de resolver o problema da conversão de <i>Moore</i> para <i>Mealy</i> estava ocorrendo um <i>bug</i> que estava consumindo mais tempo do que o esperado para resolve-lo, até que um dia foi jogado todo o código fora e construído um novo com base em uma ideia que veio inesperadamente dentro do ônibus..<br><br>
 
 Para que seja feito o uso do programa, é necessário informar o caminho do arquivo de entrada e também informar o caminho do arquivo de saída. Somente o arquivo de entrada deve existir.<br><br>
 
