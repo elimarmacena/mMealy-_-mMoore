@@ -31,9 +31,9 @@ Elimar Macena:      [elimarmacena](https://github.com/elimarmacena)<br>
 python3 main.py -i arquivoOrigem.txt -o arquivoDestino.txt
 ```
 >-i: Indica que o próx. arg. é o caminho do arquivo de entrada contendo a máquina(a ser convertida) em s-expression.<br>
->-o: Indica que o próx. arg. é o caminho do arquivo de saída, que conterá a máquina convertida (em s-expression).<br><br>
+>-o: Indica que o próx. arg. é o caminho do arquivo de saída, que conterá a máquina convertida (em s-expression).
 
-&nbsp;&nbsp;É necessário executar o programa utilizando a linguagem <i>Python</i> em sua versão 3.5 ou mais recente (devido o uso de recursos como <i>typing</i>).
+<br>&nbsp;&nbsp;É necessário executar o programa utilizando a linguagem <i>Python</i> em sua versão 3.5 ou mais recente (devido o uso de recursos como <i>typing</i>).
 
 ### 5. Exemplos de maquina<br>
 #### 5.1 Moore <br> 
