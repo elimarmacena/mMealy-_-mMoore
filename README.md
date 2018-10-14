@@ -19,7 +19,8 @@ Elimar Macena:      [elimarmacena](https://github.com/elimarmacena)<br>
 &nbsp;&nbsp;O arquivo "main.py", aplicação, é responsável por receber os argumentos, verificar se o arquivo de entrada existe, abri-lo e convertê-lo para lista, de lista para máquina, identificar o tipo da máquina e invocar o método de conversão de acordo com o tipo obtido. Por fim, converte a nova máquina para S-Expression e a escreve em um novo arquivo, criado no caminho de saída recebido como argumento.<br>
 
 ### 3. Procedimento para compilação do trabalho<br>
-&nbsp;&nbsp;Por se tratar de um script <i>Python</i>, uma linguagem interpretada, o procedimento de compilação é dispensável.
+
+&nbsp;&nbsp;Todos os módulos usados ("argparse", "path", "random", "string" e "typing") são suportados nativamente pela linguagem em sua versão 3.5 ou superior, aliado ao fato de Python ser uma linguagem interpretada, o uso do programa dispensa, portanto, arquivos para gerência de dependências, compilação ou construção(build) do executável.<br>
   
 ### 4. Nome e Modo de Uso do Programa<br>
 &nbsp;&nbsp;O nome escolhido para o programa desenvolvido é <i>Machine_Transformation</i>, porque, afinal, se trata de uma conversão de máquina.<br>
