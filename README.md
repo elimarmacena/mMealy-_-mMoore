@@ -16,10 +16,10 @@ Elimar Macena:      [elimarmacena](https://github.com/elimarmacena)<br>
 
 &nbsp;&nbsp;A maior dificuldade encontrada foi na questão de resolução da equivalência de <i>Mealy</i> para <i>Moore</i>, mas o problema proposto foi resolvido da seguinte maneira, o código avalia as transições feitas para cada estado, checa se existe a necessidade de criar outro estado, faz a ligação do estado com o caractere de saída e também guarda o estado da máquina de <i>Mealy</i> que o mesmo se originou. Após isto, são criadas as novas transações, copiando as transações antigas e substituindo os estados da máquina de <i>Mealy</i> para os estados derivados utilizados na máquina de <i>Moore</i>, por fim os caracteres de saída da transação são removidos, deixando-os apenas nos estados.<br>
 
-&nbsp;&nbsp;O arquivo "main.py", aplicação, é responsável por receber os argumentos, verificar se o arquivo de entrada existe, abri-lo e convertê-lo para lista, de lista para máquina, identificar o tipo da máquina e invocar o método de conversão de acordo com o tipo obtido. Por fim, converte a nova máquina para S-Expression e a escreve em um novo arquivo, criado no caminho de saída recebido como argumento .<br>
+&nbsp;&nbsp;O arquivo "main.py", aplicação, é responsável por receber os argumentos, verificar se o arquivo de entrada existe, abri-lo e convertê-lo para lista, de lista para máquina, identificar o tipo da máquina e invocar o método de conversão de acordo com o tipo obtido. Por fim, converte a nova máquina para S-Expression e a escreve em um novo arquivo, criado no caminho de saída recebido como argumento.<br>
 
 ### 3. Procedimento para compilação do trabalho<br>
-&nbsp;&nbsp;Por se tratar de um script Python, uma linguagem interpretada, o procedimento de compilação é dispensável.
+&nbsp;&nbsp;Por se tratar de um script <i>Python</i>, uma linguagem interpretada, o procedimento de compilação é dispensável.
   
 ### 4. Nome e Modo de Uso do Programa<br>
 &nbsp;&nbsp;O nome escolhido para o programa desenvolvido é <i>Machine_Transformation</i>, porque, afinal, se trata de uma conversão de máquina.<br>
@@ -27,13 +27,13 @@ Elimar Macena:      [elimarmacena](https://github.com/elimarmacena)<br>
 &nbsp;&nbsp;Para que seja feito o uso do programa, é necessário informar o caminho do arquivo de entrada e também informar o caminho do arquivo de saída. Somente o arquivo de entrada deve existir.<br>
 
 &nbsp;&nbsp;Exemplo:
-```sh
+```shell
 python3 main.py -i arquivoOrigem.txt -o arquivoDestino.txt
 ```
 >-i: Indica que o próx. arg. é o caminho do arquivo de entrada contendo a máquina(a ser convertida) em s-expression.<br>
->-o: Indica que o próx. arg. é o caminho do arquivo de saída, que conterá a máquina convertida (em s-expression).<br>
+>-o: Indica que o próx. arg. é o caminho do arquivo de saída, que conterá a máquina convertida (em s-expression).<br><br>
 
->É necessário executar o software utilizando a linguagem Python em sua versão 3.5 ou mais recente (devido o uso de recursos como "typing").
+&nbsp;&nbsp;É necessário executar o programa utilizando a linguagem <i>Python</i> em sua versão 3.5 ou mais recente (devido o uso de recursos como <i>typing</i>).
 
 ### 5. Exemplos de maquina<br>
 #### 5.1 Moore <br> 
